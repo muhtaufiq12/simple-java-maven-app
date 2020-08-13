@@ -1,9 +1,6 @@
 pipeline {
     agent {
-        docker {
-            image 'maven:3-alpine'
-            args '-v /root/.m2:/root/.m2'
-        }
+        label "dockerworker"
     }
     stages {
         stage('Build') {
@@ -21,10 +18,20 @@ pipeline {
                 }
             }
         }
-        stage('Deliver') {
+        stage('Build image') {
             steps {
-                sh './jenkins/scripts/deliver.sh'
+                sh 'docker build -t my-app .'
             }
+        }
+        stage('Run app') {
+            steps {
+                sh 'docker run -p my-app'
+            }
+        }
+    }
+    post {
+        always {
+            deleteDir()
         }
     }
 }
