@@ -1,2 +1,2 @@
-@Library('library-test@develop') _
-deliveryPipeline()
+@Library('my-shared-library@develop') _
+java()
